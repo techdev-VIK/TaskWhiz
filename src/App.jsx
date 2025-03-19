@@ -1,6 +1,6 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import Todo from './components/Todo';
 
 function App() {
@@ -12,16 +12,36 @@ function App() {
   const [status, setStatus] = useState('Not Started');
 
 
+  const statuses = ["Not Started", "In Progress", "Completed"];
+
+
+
+  useEffect(() => {
+    const storedTodos = localStorage.getItem('myTodos');
+
+    if(storedTodos){
+      setTodos(JSON.parse(storedTodos))
+    }
+  },[])
+
+
+  useEffect(() => {
+    if(todos.length > 0){
+      localStorage.setItem('myTodos', JSON.stringify(todos))
+    }
+  }, [todos])
+
 
   const addTodoHandler = () => {
 
     if(task.trim() !== "")
       {
-        setTodos((prev) => [...prev, {id: Date.now(), name: task, status: status}])
+        const newTodo = {id: Date.now(), name: task, status: status};
+        setTodos((prev) => [...prev, newTodo]);
       }
 
     setTask('');
-    setStatus('Not Started')
+    setStatus('Not Started');
 
   }
 
@@ -29,11 +49,10 @@ function App() {
   const handleDelete = (id) => {
 
 
-    const filtered = todos.filter((todo) => todo.id !== id)
+    const filtered = todos.filter((todo) => todo.id !== id);
 
     setTodos(filtered)  
   }
-
 
 
   return (
@@ -58,54 +77,24 @@ function App() {
       </div>
 
       <hr />
-      
 
 
-      <div className='row py-5'>
+
+      <div className="row py-5">
+
+        {statuses.map((statusType) => (
+          <div className='col-md-4' key={statusType}>
+            <h3>{statusType}</h3>
+            <div className='row mt-3'>
+            {todos.filter((stat) => stat.status === statusType).map((todo) => (
+              <Todo key={todo.id} todo={todo}  handleDelete={handleDelete} />
+            ))}
+            </div>
+          </div>
+        ))}
         
-          <div className='col-md-4'>
-
-            <h3>Not Started</h3>
-
-            <div className='row mt-3'>
-            {todos.filter((todo) => todo.status === "Not Started").map((todo, index) => (
-              
-                <Todo key={todo.id} todo={todo}  handleDelete={handleDelete} />
-              
-            ))}
-          </div>
-            
-          </div>
-
-          <div className='col-md-4'>
-           
-            <h3>In Progress</h3>
-
-            <div className='row mt-3'>
-            {todos.filter((todo) => todo.status === "In Progress").map((todo, index) => (
-              
-                <Todo key={todo.id} todo={todo}  handleDelete={handleDelete} />
-          
-            ))}
-          </div>
-            
-          </div>
-
-          <div className='col-md-4'>
-
-            <h3>Completed</h3>
-
-            <div className='row mt-3'>
-            {todos.filter((todo) => todo.status === "Completed").map((todo, index) => (
-              
-                <Todo key={todo.id} todo={todo}  handleDelete={handleDelete} />
-              
-            ))}
-          </div>
-
-          </div>
-   
       </div>
+
       
     </main>
   )
