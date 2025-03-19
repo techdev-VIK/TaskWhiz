@@ -55,6 +55,19 @@ function App() {
   }
 
 
+  const handleStatusChange = (e, id) => {
+
+      const {value} = e.target;
+
+      const statusChange = todos.map((todo) => (
+        todo.id === id ? {...todo, status: value} : todo
+      ))
+
+
+      setTodos(statusChange);
+  }
+
+
   return (
     <main className='container my-4'>
       
@@ -87,7 +100,7 @@ function App() {
             <h3>{statusType}</h3>
             <div className='row mt-3'>
             {todos.filter((stat) => stat.status === statusType).map((todo) => (
-              <Todo key={todo.id} todo={todo}  handleDelete={handleDelete} />
+              <Todo key={todo.id} todo={todo}  handleDelete={handleDelete} handleStatusChange={handleStatusChange} />
             ))}
             </div>
           </div>
