@@ -2,6 +2,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 
 import { useEffect, useState } from 'react'
 import Todo from './components/Todo';
+import { toast } from 'react-toastify';
 
 function App() {
 
@@ -9,7 +10,7 @@ function App() {
 
   const [task, setTask] = useState('');
 
-  const [status, setStatus] = useState('Not Started');
+  const [status, setStatus] = useState('');
 
 
   const statuses = ["Not Started", "In Progress", "Completed"];
@@ -40,8 +41,10 @@ function App() {
         setTodos((prev) => [...prev, newTodo]);
       }
 
-    setTask('');
-    setStatus('Not Started');
+      setTask('');
+      setStatus('');
+
+      toast.success("Todo added!");
 
   }
 
@@ -51,7 +54,8 @@ function App() {
 
     const filtered = todos.filter((todo) => todo.id !== id);
 
-    setTodos(filtered)  
+    setTodos(filtered);
+    toast.error("Todo deleted!");
   }
 
 
@@ -65,6 +69,8 @@ function App() {
 
 
       setTodos(statusChange);
+      toast.info("Todo status updated!");
+
   }
 
 
@@ -79,12 +85,13 @@ function App() {
 
       <div className='d-flex'>
       <select value={status} onChange={(e) => setStatus(e.target.value)} className='form-select w-auto'>
+        <option value="" disabled>Choose Status</option>
         <option value="Not Started">Not Started</option>
         <option value="In Progress">In Progress</option>
         <option value="Completed">Completed</option>
       </select>
 
-      <button className='btn btn-success ms-3' onClick={addTodoHandler}>Add Todo</button>
+      <button className='btn btn-success ms-3' onClick={addTodoHandler}> + Add Todo</button>
       </div>
       
       </div>
@@ -93,10 +100,10 @@ function App() {
 
 
 
-      <div className="row py-5">
+      <div className="row">
 
         {statuses.map((statusType) => (
-          <div className='col-md-4' key={statusType}>
+          <div className='col-md-4 mt-5' key={statusType}>
             <h3>{statusType}</h3>
             <div className='row mt-3'>
             {todos.filter((stat) => stat.status === statusType).map((todo) => (

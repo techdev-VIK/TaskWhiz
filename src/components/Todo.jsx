@@ -26,8 +26,7 @@ const Todo = ({todo, handleDelete, handleStatusChange}) => {
 
 
                 <div className="d-flex justify-content-between mt-3">
-                <select id="" className="btn btn-sm btn-outline-success" onChange={(e) => handleStatusChange(e, todo.id)}>
-                    <option value="">Change Status</option>
+                <select id="todoCard" className="btn btn-sm btn-outline-success" onChange={(e) => handleStatusChange(e, todo.id)} value={todo.status}>
                     <option value="Not Started">Not Started</option>
                     <option value="In Progress">In Progress</option>
                     <option value="Completed">Completed</option>
